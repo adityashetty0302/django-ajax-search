@@ -1,0 +1,4 @@
+
+user: aditya
+type: admin
+pass: aditya
