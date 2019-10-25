@@ -4,6 +4,8 @@ from .forms import UserForm
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 
 def home(request):
@@ -54,3 +56,14 @@ def user_login(request):
                           {"login_error": login_error})
     else:
         return render(request, 'app/login.html', {"login_error": login_error})
+
+
+def check_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A user with this username already exists.'
+
+    return JsonResponse(data)
